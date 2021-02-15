@@ -1,10 +1,10 @@
 package top.aolien.redis.mq;
 
-public class RedisMessage {
+public class RedisMessage<T> {
 
     private String queueName;
 
-    private Object data;
+    private T data;
 
     public String getQueueName() {
         return queueName;
@@ -14,11 +14,11 @@ public class RedisMessage {
         this.queueName = queueName;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 }
