@@ -1,6 +1,10 @@
 package top.aolien.redis.mq;
 
-public class RedisMessage<T> {
+import java.io.Serializable;
+
+public class RedisMessage<T> implements Serializable {
+
+    private static final long serialVersionUID = 42L;
 
     private String queueName;
 

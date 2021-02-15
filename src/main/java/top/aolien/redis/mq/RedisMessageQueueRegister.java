@@ -1,14 +1,15 @@
 package top.aolien.redis.mq;
 
-import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
@@ -20,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 
 public class RedisMessageQueueRegister implements ApplicationRunner, ApplicationContextAware {
 
+    private final Logger logger = LoggerFactory.getLogger(RedisMessageQueueRegister.class);
+
     private final static String THREAD_PREFIX = "redismq-thread-";
 
     private final List<Thread> listenerQueue = new ArrayList<>();
@@ -29,7 +32,7 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
     private ApplicationContext applicationContext;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisTemplate redisTemplate;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -66,8 +69,7 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
 
             while (true) {
                 try {
-                    String msg = stringRedisTemplate.opsForList().leftPop(queueName, 0L, TimeUnit.MINUTES);
-                    RedisMessage redisMessage = JSON.parseObject(msg, RedisMessage.class);
+                    RedisMessage msg = (RedisMessage) redisTemplate.opsForList().leftPop(queueName, 0L, TimeUnit.MINUTES);
 
                     List<RedisListenerMethod> all = RedisListenerAnnotationScanPostProcesser.getCandidates();
                     ArrayList<RedisListenerMethod> canApplyList = new ArrayList<>();
@@ -80,12 +82,12 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
                     if (canApplyList.size() > 0) {
                         for (RedisListenerMethod rlm : canApplyList) {
                             Method targetMethod = rlm.getTargetMethod();
-                            targetMethod.invoke(rlm.getBean(applicationContext), redisMessage);
+                            targetMethod.invoke(rlm.getBean(applicationContext), msg);
                         }
                     }
 
                 } catch (Throwable e) {
-                    new RuntimeException("消息处理器创建运行异常", e);
+                    logger.error("redisMQ队列【" + queueName + "】消息处理时异常", e);
                 }
             }
         }
