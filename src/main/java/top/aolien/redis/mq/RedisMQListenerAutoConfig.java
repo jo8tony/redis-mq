@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(prefix = "redis.queue.listener", name = "enable", havingValue = "true", matchIfMissing = true)
-public class RedisMqListenerAutoConfig {
+public class RedisMQListenerAutoConfig {
 
     @Bean
     public RedisListenerAnnotationScanPostProcesser redisListenerAnnotationScanPostProcesser(){
