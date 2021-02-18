@@ -14,6 +14,8 @@ public class RedisListenerMethod {
 
     private Method targetMethod;
 
+    private String methodParameterClassName;
+
 
     public String getQueueName() {
         return queueName;
@@ -55,6 +57,14 @@ public class RedisListenerMethod {
 
     public void setBean(Object bean) {
         this.bean = bean;
+    }
+
+    public String getMethodParameterClassName() {
+        return methodParameterClassName;
+    }
+
+    public void setMethodParameterClassName(String methodParameterClassName) {
+        this.methodParameterClassName = methodParameterClassName;
     }
 
     public boolean match(String queueName) {

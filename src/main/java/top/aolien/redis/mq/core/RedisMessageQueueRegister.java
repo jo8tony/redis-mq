@@ -86,7 +86,15 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
                     if (canApplyList.size() > 0) {
                         for (RedisListenerMethod rlm : canApplyList) {
                             Method targetMethod = rlm.getTargetMethod();
-                            targetMethod.invoke(rlm.getBean(applicationContext), msg);
+                            if (rlm.getMethodParameterClassName().equals(RedisMessage.class.getName())) {
+                                targetMethod.invoke(rlm.getBean(applicationContext), msg);
+                            } else if (rlm.getMethodParameterClassName()
+                                    .equalsIgnoreCase(msg.getData().getClass().getName())){
+                                targetMethod.invoke(rlm.getBean(applicationContext), msg.getData());
+                            } else {
+                                throw new RuntimeException("消息队列【" + queueName + "】中的消息类型与"
+                                        + targetMethod.getName() + "定义的类型不一致);");
+                            }
                         }
                     }
 

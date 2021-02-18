@@ -30,7 +30,8 @@ public class RedisListenerAnnotationScanPostProcesser implements BeanPostProcess
                     .findMergedAnnotationAttributes(method, RedisListener.class, false, false);
             if (null != annotationAttributes) {
                 Class<?>[] parameterTypes = method.getParameterTypes();
-                if (parameterTypes.length == 1 && RedisMessage.class.isAssignableFrom(parameterTypes[0])) {
+//                if (parameterTypes.length == 1 && RedisMessage.class.isAssignableFrom(parameterTypes[0])) {
+                if (parameterTypes.length == 1) {
                     String queueName = (String) annotationAttributes.get("queueName");
                     if (StringUtils.isEmpty(queueName)) {
                         throw new RuntimeException("在" + method + "方法上的注解@RedisListener没有设置参数queueName的值");
@@ -39,9 +40,11 @@ public class RedisListenerAnnotationScanPostProcesser implements BeanPostProcess
                     rlm.setBeanName(beanName);
                     rlm.setQueueName(queueName);
                     rlm.setTargetMethod(method);
+                    rlm.setMethodParameterClassName(parameterTypes[0].getName());
                     candidates.add(rlm);
                 } else {
-                    throw new RuntimeException("有@RedisListener注解的方法有且仅能包含一个RedisMessage类型的参数");
+//                    throw new RuntimeException("有@RedisListener注解的方法有且仅能包含一个RedisMessage类型的参数");
+                    throw new RuntimeException("有@RedisListener注解的方法有且仅能包含一个参数");
                 }
             }
         }
