@@ -1,11 +1,14 @@
 package top.aolien.redis.mq;
 
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@ToString
 public class RedisMessage<T> implements Serializable {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 1L;
 
     private String queueName;
 

@@ -1,4 +1,4 @@
-package top.aolien.redis.mq;
+package top.aolien.redis.mq.core;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -6,6 +6,9 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.util.ReflectionUtils;
+import top.aolien.redis.mq.RedisListener;
+import top.aolien.redis.mq.RedisListenerMethod;
+import top.aolien.redis.mq.RedisMessage;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

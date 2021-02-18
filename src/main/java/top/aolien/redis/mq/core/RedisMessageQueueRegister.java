@@ -1,4 +1,4 @@
-package top.aolien.redis.mq;
+package top.aolien.redis.mq.core;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -11,6 +11,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.QueryTimeoutException;
 import org.springframework.data.redis.core.RedisTemplate;
+import top.aolien.redis.mq.RedisListenerMethod;
+import top.aolien.redis.mq.RedisMessage;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
@@ -56,6 +58,7 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
             thread.setName(THREAD_PREFIX + listener);
             listenerQueue.add(thread);
             thread.start();
+            logger.info("启动消息队列监听器：【" + listener + "】");
         }
     }
 
@@ -88,7 +91,7 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
                     }
 
                 } catch (QueryTimeoutException e1) {
-                    logger.error(e1.getMessage());
+                    logger.warn(e1.getMessage());
                 } catch (Throwable e) {
                     logger.error("redisMQ队列【" + queueName + "】消息处理时异常", e);
                 }

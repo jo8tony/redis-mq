@@ -1,7 +1,8 @@
-package top.aolien.redis.mq;
+package top.aolien.redis.mq.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import top.aolien.redis.mq.RedisMessage;
 
 import java.time.LocalDateTime;
 
