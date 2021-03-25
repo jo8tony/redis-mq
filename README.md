@@ -16,7 +16,7 @@ mvn install
 <dependency>
     <groupId>top.aolien</groupId>
     <artifactId>redismq-spring-boot-starter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 ##### 3.添加配置
@@ -51,14 +51,14 @@ public class Student implements Serializable {
 }
 ```
 然后创建一个TestController类，最作为web项目的接口用于发送给redis消息测试。
-PS：redis消息发送的方法是`RedisMQUtil.send(参数1，参数2)`方法，参数1是String类型的消息队列名称，参数2是实现序列化接口的你想传递的任意数据。
+PS：redis消息发送的方法是`RedisMQSender.send(参数1，参数2)`方法，参数1是String类型的消息队列名称，参数2是实现序列化接口的你想传递的任意数据。
 
 ```java
 @RestController
 public class TestController {
 
     @Autowired
-    private RedisMQUtil redisMQUtil;
+    private RedisMQSender redisMQSender;
 
     @RequestMapping("/send/msg")
     public String sendQueueMessage1(){
@@ -67,7 +67,7 @@ public class TestController {
                 .setName("jo8tony")
                 .setSex("男")
                 .setAge(18);
-        redisMQUtil.send("queue-1", student);
+        redisMQSender.send("queue-1", student);
         return "SUCCESS";
     }
 
@@ -78,7 +78,7 @@ public class TestController {
                 .setName("小红")
                 .setSex("女")
                 .setAge(20);
-        redisMQUtil.send("queue-2", student);
+        redisMQSender.send("queue-2", student);
         return "SUCCESS";
     }
 
