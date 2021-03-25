@@ -42,7 +42,6 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
         this.applicationContext = applicationContext;
     }
 
-    @PostConstruct
     public void init() {
         List<RedisListenerMethod> candidates = RedisListenerAnnotationScanPostProcesser.getCandidates();
         for (RedisListenerMethod candidate : candidates) {
@@ -52,6 +51,8 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        // 初始化消息队列名称
+        init();
         // 启动redis消息队列监听器
         for (String listener : registerQueueListener) {
             Thread thread = new Thread(new Worker().setQueueName(listener));
@@ -65,6 +66,8 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
     private class Worker implements Runnable{
         private String queueName = "";
 
+        private List<RedisListenerMethod> canApplyList = new ArrayList<>();
+
         @Override
         public void run() {
             if (StringUtils.isEmpty(queueName)) {
@@ -74,14 +77,6 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
             while (true) {
                 try {
                     RedisMessage msg = (RedisMessage) redisTemplate.opsForList().leftPop(queueName, 0L, TimeUnit.SECONDS);
-
-                    List<RedisListenerMethod> all = RedisListenerAnnotationScanPostProcesser.getCandidates();
-                    ArrayList<RedisListenerMethod> canApplyList = new ArrayList<>();
-                    for (RedisListenerMethod rlm : all) {
-                        if (rlm.match(queueName)) {
-                            canApplyList.add(rlm);
-                        }
-                    }
 
                     if (canApplyList.size() > 0) {
                         for (RedisListenerMethod rlm : canApplyList) {
@@ -106,8 +101,20 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
             }
         }
 
+        private void obtainCanApplyList() {
+            if (canApplyList.size() <= 0) {
+                List<RedisListenerMethod> all = RedisListenerAnnotationScanPostProcesser.getCandidates();
+                for (RedisListenerMethod rlm : all) {
+                    if (rlm.match(queueName)) {
+                        canApplyList.add(rlm);
+                    }
+                }
+            }
+        }
+
         public Worker setQueueName(String queueName) {
             this.queueName = queueName;
+            obtainCanApplyList();
             return this;
         }
     }
