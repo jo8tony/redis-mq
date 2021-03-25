@@ -1,6 +1,5 @@
 package top.aolien.redis.mq.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import top.aolien.redis.mq.RedisMessage;
 
@@ -9,11 +8,14 @@ import java.time.LocalDateTime;
 
 public class RedisMQUtil {
 
-    @Autowired
     private RedisTemplate redisTemplate;
 
+    public RedisMQUtil(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
     public void send(String queueName, Serializable msg) {
-        msg = null == msg ? "" : msg;
+        msg = (null == msg ? "" : msg);
         RedisMessage redisMessage = new RedisMessage();
         redisMessage.setQueueName(queueName);
         redisMessage.setCreaetTime(LocalDateTime.now());

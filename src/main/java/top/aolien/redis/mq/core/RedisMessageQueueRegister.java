@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
@@ -14,7 +15,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import top.aolien.redis.mq.RedisListenerMethod;
 import top.aolien.redis.mq.RedisMessage;
 
-import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,6 +35,7 @@ public class RedisMessageQueueRegister implements ApplicationRunner, Application
     private ApplicationContext applicationContext;
 
     @Autowired
+    @Qualifier("redisMQTemplate")
     private RedisTemplate redisTemplate;
 
     @Override
