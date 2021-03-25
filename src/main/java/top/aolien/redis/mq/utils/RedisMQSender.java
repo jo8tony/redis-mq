@@ -6,11 +6,11 @@ import top.aolien.redis.mq.RedisMessage;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class RedisMQUtil {
+public class RedisMQSender {
 
     private RedisTemplate redisTemplate;
 
-    public RedisMQUtil(RedisTemplate redisTemplate) {
+    public RedisMQSender(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

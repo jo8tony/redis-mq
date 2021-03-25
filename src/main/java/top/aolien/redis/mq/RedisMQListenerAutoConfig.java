@@ -10,7 +10,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import top.aolien.redis.mq.core.RedisListenerAnnotationScanPostProcesser;
 import top.aolien.redis.mq.core.RedisMessageQueueRegister;
-import top.aolien.redis.mq.utils.RedisMQUtil;
+import top.aolien.redis.mq.utils.RedisMQSender;
 
 @Configuration
 @ConditionalOnBean(RedisConnectionFactory.class)
@@ -31,8 +31,8 @@ public class RedisMQListenerAutoConfig {
     }
 
     @Bean
-    public RedisMQUtil redisMQUtil() {
-        return new RedisMQUtil(redisMQTemplate());
+    public RedisMQSender redisMQUtil() {
+        return new RedisMQSender(redisMQTemplate());
     }
 
     @Bean("redisMQTemplate")
