@@ -18,7 +18,7 @@ public class RedisMQSender {
         msg = (null == msg ? "" : msg);
         RedisMessage redisMessage = new RedisMessage();
         redisMessage.setQueueName(queueName);
-        redisMessage.setCreaetTime(LocalDateTime.now());
+        redisMessage.setCreateTime(LocalDateTime.now());
         redisMessage.setData(msg);
 
         redisTemplate.opsForList().rightPush(queueName, redisMessage);

@@ -14,7 +14,7 @@ public class RedisMessage<T> implements Serializable {
 
     private T data;
 
-    private LocalDateTime creaetTime;
+    private LocalDateTime createTime;
 
     public String getQueueName() {
         return queueName;
@@ -32,11 +32,11 @@ public class RedisMessage<T> implements Serializable {
         this.data = data;
     }
 
-    public LocalDateTime getCreaetTime() {
-        return creaetTime;
+    public LocalDateTime getCreateTime() {
+        return createTime;
     }
 
-    public void setCreaetTime(LocalDateTime creaetTime) {
-        this.creaetTime = creaetTime;
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 }
